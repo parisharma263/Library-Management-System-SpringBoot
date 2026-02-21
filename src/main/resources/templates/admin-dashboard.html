@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+                <h2>Library Management (Admin)</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a th:href="@{/books}"><i class="fas fa-book-open"></i> Books (Catalog)</a></li>
+                <li><a th:href="@{/admin/students}"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+
+                <li><a th:href="@{/admin/requests}"><i class="fas fa-inbox"></i> Manage Requests</a></li>
+
+                <li><a th:href="@{/admin/issued}"><i class="fas fa-list-alt"></i> Issued Books</a></li>
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="page-header">
+            <h1 class="page-title">Admin Dashboard</h1>
+            <p class="page-subtitle">Welcome back, Admin. Full control over the system.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="action-card">
+                <h2>Student Records</h2>
+                <p>Add new students or edit existing records.</p>
+                <a th:href="@{/admin/students}" class="btn-primary">Go to Management</a>
+            </div>
+            <div class="action-card">
+                <h2>Book Requests</h2>
+                <p>Review and process pending student book requests.</p>
+                <a th:href="@{/admin/requests}" class="btn-primary">View Requests</a>
+            </div>
+            <div class="action-card">
+                <h2>Loan Management</h2>
+                <p>View all active loans and process returns.</p>
+                <a th:href="@{/admin/issued}" class="btn-primary">View Issued Books</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

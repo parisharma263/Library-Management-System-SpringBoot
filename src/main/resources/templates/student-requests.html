@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+                <h2>Library Portal</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a th:href="@{/books}"><i class="fas fa-book-open"></i> View Catalog</a></li>
+                <li><a th:href="@{/student/issued-books}"><i class="fas fa-list-alt"></i> My Issued Books</a></li>
+                <li><a th:href="@{/student/requests}" class="active"><i class="fas fa-inbox"></i> My Book Requests</a>
+                </li>
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="page-header">
+            <h1><i class="fas fa-inbox"></i> My Pending Requests</h1>
+            <p>View the status of the books you have requested from the Admin.</p>
+        </div>
+
+        <!-- If No Requests -->
+        <div th:if="${#lists.isEmpty(requests)}" class="empty-state">
+            <i class="fas fa-envelope-open-text"></i>
+            <h3>No Active Requests</h3>
+            <p>Go to the Books catalog to submit a new request.</p>
+        </div>
+
+        <!-- If Requests Exist -->
+        <div th:unless="${#lists.isEmpty(requests)}" class="data-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Author</th>
+                        <th>Request Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="request : ${requests}">
+                        <td th:text="${request.book.title}">Book Title</td>
+                        <td th:text="${request.book.author}">Author</td>
+                        <td th:text="${#temporals.format(request.requestDate, 'dd MMM yyyy')}">01 Jan 2026</td>
+                        <td>
+                            <!-- SAFE Dynamic Status Class -->
+                            <span th:text="${request.status}"
+                                th:class="'status-' + ${request.status.name().toLowerCase()}">
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

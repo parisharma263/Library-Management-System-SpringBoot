@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Student Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+                <h2>Library Portal</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a th:href="@{/books}"><i class="fas fa-book-open"></i> View Catalog</a></li>
+                <li><a th:href="@{/student/issued-books}"><i class="fas fa-list-alt"></i> My Issued Books</a></li>
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="page-header">
+            <h1 class="page-title">Student Dashboard</h1>
+            <p class="page-subtitle">Welcome to your personal library portal.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="action-card">
+                <h2>Book Catalog</h2>
+                <p>Browse available books in the library collection.</p>
+                <a th:href="@{/books}" class="btn-primary">Browse Books</a>
+            </div>
+            <div class="action-card">
+                <h2>My Loans</h2>
+                <p>View the list of books currently issued to you.</p>
+                <a th:href="@{/student/issued-books}" class="btn-primary">View Loans</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

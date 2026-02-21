@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Edit Book (Admin) - Library Management System</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+                <h2>Library Management</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/books" class="active"><i class="fas fa-book-open"></i> Books</a></li>
+                <li><a th:href="@{/admin/students}"><i class="fas fa-user-graduate"></i> Students</a></li>
+                <li><a th:href="@{/admin/issue}"><i class="fas fa-hand-holding"></i> Issue Book</a></li>
+                <li><a th:href="@{/admin/issued}"><i class="fas fa-list-alt"></i> Issued Books (Admin)</a></li>
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="page-header">
+            <h1 class="page-title">Edit Book</h1>
+            <p class="page-subtitle">Update book details</p>
+        </div>
+
+        <div class="form-card">
+            <h2 class="form-title">
+                <i class="fas fa-book-reader"></i>
+                Edit Book Details
+            </h2>
+
+            <form th:action="@{/admin/books/update}" th:object="${book}" method="post">
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="title">Book Title</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-book input-icon"></i>
+                            <input type="text" id="title" th:field="*{title}" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-edit input-icon"></i>
+                            <input type="text" id="author" th:field="*{author}" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="totalQuantity">Total Quantity</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-hashtag input-icon"></i>
+                            <input type="number" id="totalQuantity" th:field="*{totalQuantity}" required />
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save"></i> Update Book
+                </button>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>

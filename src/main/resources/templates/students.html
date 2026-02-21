@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+                <h2>Library Management</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/books"><i class="fas fa-book-open"></i> Books</a></li>
+                <li><a th:href="@{/admin/students}" class="active"><i class="fas fa-user-graduate"></i> Students</a>
+                </li>
+                <li><a th:href="@{/admin/requests}"><i class="fas fa-hand-holding"></i> Issue Book</a></li>
+                <li><a th:href="@{/admin/issued}"><i class="fas fa-list-alt"></i> Issued Books (Admin)</a></li>
+                <li>
+                    <form th:action="@{/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="page-header">
+            <h1 class="page-title">Student Management (Admin)</h1>
+            <p class="page-subtitle">Register new students and manage existing registrations</p>
+        </div>
+
+        <div class="registration-card">
+            <h2 class="form-title">
+                <i class="fas fa-user-plus"></i>
+                Register New Student
+            </h2>
+
+            <form th:action="@{/admin/students/add}" th:object="${student}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">
+                            <i class="fas fa-user"></i> Full Name
+                        </label>
+                        <input type="text" id="name" th:field="*{name}" placeholder="Enter student's full name"
+                            required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </label>
+                        <input type="email" id="email" th:field="*{email}" placeholder="Enter email address" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rollNumber">
+                            <i class="fas fa-id-card"></i> Roll Number
+                        </label>
+                        <input type="text" id="rollNumber" th:field="*{rollNumber}" placeholder="Enter roll number"
+                            required />
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus-circle"></i> Register Student
+                </button>
+            </form>
+        </div>
+
+        <div class="students-section">
+            <h3 class="section-title">
+                <i class="fas fa-users"></i>
+                Registered Students
+            </h3>
+
+            <div class="students-grid">
+                <div class="student-card" th:each="student : ${students}">
+                    <div class="student-info">
+                        <div class="student-info-item">
+                            <span class="student-info-label">Name</span>
+                            <span class="student-info-value" th:text="${student.name}">John Doe</span>
+                        </div>
+                        <div class="student-info-item">
+                            <span class="student-info-label">Email</span>
+                            <span class="student-info-value" th:text="${student.email}">john@example.com</span>
+                        </div>
+                        <div class="student-info-item">
+                            <span class="student-info-label">Roll Number</span>
+                            <span class="student-info-value" th:text="${student.rollNumber}">2024001</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <a th:href="@{'/admin/students/edit/' + ${student.id}}" class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a th:href="@{'/admin/students/delete/' + ${student.id}}" class="action-btn delete-btn"
+                            onclick="return confirm('Are you sure you want to delete this student?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

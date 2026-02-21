@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Books Catalog - Library Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+                <h2>Library Management</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a th:href="@{/books}" class="active"><i class="fas fa-book"></i> Books</a></li>
+
+                <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/students}"><i class="fas fa-users"></i>
+                        Students</a></li>
+                <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/requests}"><i class="fas fa-hand-holding"></i>
+                        Issue Book</a></li>
+                <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/issued}"><i class="fas fa-list-alt"></i>
+                        Issued Books</a></li>
+
+                <li sec:authorize="hasRole('STUDENT')"><a th:href="@{/student/requests}"><i class="fas fa-inbox"></i> My
+                        Book Requests</a></li>
+
+                <li sec:authorize="hasRole('STUDENT')"><a th:href="@{/student/issued-books}"><i
+                            class="fas fa-list-alt"></i> My Issued Books</a></li>
+
+                <li>
+                    <form th:action="@{/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="page-header">
+            <h1><i class="fas fa-book-reader"></i> Book Catalog</h1>
+            <p>Browse the library's book collection.</p>
+        </div>
+
+        <div th:if="${message}" class="success-message">
+            <p><i class="fas fa-check-circle"></i> <span th:text="${message}">Book request submitted
+                    successfully!</span></p>
+        </div>
+        <div th:if="${error}" class="error-message">
+            <p><i class="fas fa-exclamation-triangle"></i> <span th:text="${error}">Failed to submit book
+                    request.</span></p>
+        </div>
+        <div class="add-book-section" sec:authorize="hasRole('ADMIN')">
+            <div class="section-title">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add New Book</span>
+            </div>
+            <form th:action="@{/admin/books/add}" th:object="${book}" method="post">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">Book Title</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-book input-icon"></i>
+                            <input type="text" id="title" th:field="*{title}" placeholder="Enter book title" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-edit input-icon"></i>
+                            <input type="text" id="author" th:field="*{author}" placeholder="Enter author name"
+                                required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalQuantity">Total Quantity</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-hashtag input-icon"></i>
+                            <input type="number" id="totalQuantity" th:field="*{totalQuantity}" placeholder="e.g., 5"
+                                required value="1" />
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Book to Collection
+                </button>
+            </form>
+        </div>
+
+        <div class="books-section">
+            <div th:if="${#lists.isEmpty(books)}" class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <h3>No Books in Catalog</h3>
+                <p sec:authorize="hasRole('ADMIN')">Use the form above to add the first book.</p>
+                <p sec:authorize="hasRole('STUDENT')">Check back later when books are added to the collection.</p>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(books)}" class="books-grid">
+                <div th:each="b : ${books}" class="book-card">
+                    <div class="book-info">
+                        <h3 class="book-title">
+                            <i class="fas fa-book-reader"></i>
+                            <span th:text="${b.title}"></span>
+                        </h3>
+                        <p class="book-author">
+                            <i class="fas fa-user-pen"></i>
+                            <span th:text="${b.author}"></span>
+                        </p>
+                        <div class="book-quantity" style="margin-top: 0.75rem; font-size: 0.85rem;">
+                            <span class="status-approved" style="padding: 0.2rem 0.5rem;">
+                                <i class="fas fa-check"></i> <span th:text="${b.availableQuantity}"></span> Available
+                            </span>
+                            <span style="color: var(--text-muted); margin-left: 0.5rem;">
+                                of <span th:text="${b.totalQuantity}"></span> Total
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="book-actions" sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{'/admin/books/edit/' + ${b.id}}" class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a th:href="@{'/admin/books/delete/' + ${b.id}}" class="action-btn delete-btn"
+                            onclick="return confirm('Are you sure you want to delete this book?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+
+                    <div class="book-actions" sec:authorize="hasRole('STUDENT')">
+                        <form th:if="${b.availableQuantity > 0}" th:action="@{/books/request/{id}(id=${b.id})}"
+                            method="post">
+                            <button type="submit" class="action-btn"
+                                onclick="return confirm('Submit a request for this book?')">
+                                <i class="fas fa-paper-plane"></i> Request Book
+                            </button>
+                        </form>
+                        <span th:if="${b.availableQuantity <= 0}" class="status-rejected"
+                            style="padding: 0.5rem 1rem; display: inline-block;">
+                            <i class="fas fa-ban"></i> Out of Stock
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Login - Library Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+
+<body>
+
+  <nav>
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-book"></i>
+        <h2>Library Management</h2>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="/login" class="active"><i class="fas fa-sign-in-alt"></i> Log In</a></li>
+        <li><a href="/signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="form-container">
+      <h2>Welcome Back</h2>
+      <p class="welcome-text">Sign in to access your library management dashboard</p>
+
+      <!-- Add this section for displaying messages if needed -->
+      <div th:if="${error}" class="message error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${error}">Invalid username or password</span>
+      </div>
+
+      <div th:if="${message}" class="message" th:classappend="${messageType}">
+        <span th:text="${message}"></span>
+      </div>
+
+      <form th:action="@{/login}" method="post">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required
+              autocomplete="username" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required
+              autocomplete="current-password" />
+          </div>
+          <div class="forgot-password">
+            <a href="#" onclick="alert('Please contact your system administrator to reset your password.')">
+              Forgot Password?
+            </a>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>New to our platform?</span>
+      </div>
+
+      <p class="redirect-text">
+        Don't have an account? <a href="/signup">Create Account</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Add some interactive enhancements
+    document.addEventListener('DOMContentLoaded', function () {
+      // Add focus effects to inputs
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function () {
+          this.parentNode.parentNode.style.transform = 'translateY(-2px)';
+        });
+
+        input.addEventListener('blur', function () {
+          this.parentNode.parentNode.style.transform = 'translateY(0)';
+        });
+      });
+
+      // Add loading state to submit button
+      const form = document.querySelector('form');
+      const submitBtn = document.querySelector('.btn-primary');
+
+      form.addEventListener('submit', function () {
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+        submitBtn.disabled = true;
+      });
+
+      // Add smooth scroll effect
+      document.documentElement.style.scrollBehavior = 'smooth';
+
+      // Auto-focus on username field for better UX
+      const usernameField = document.getElementById('username');
+      if (usernameField) {
+        setTimeout(() => {
+          usernameField.focus();
+        }, 500);
+      }
+    });
+  </script>
+
+</body>
+
+</html>

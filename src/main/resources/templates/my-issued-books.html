@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <title>My Issued Books</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+
+<body>
+
+  <nav>
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-book"></i>
+        <h2>Library Portal</h2>
+      </div>
+      <ul class="nav-links">
+        <li><a th:href="@{/books}"><i class="fas fa-book-open"></i> View Catalog</a></li>
+        <li><a th:href="@{/student/issued-books}" class="active"><i class="fas fa-list-alt"></i> My Issued Books</a>
+        </li>
+        <li>
+          <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="page-header">
+      <h1 class="page-title">My Issued Books</h1>
+      <p class="page-subtitle">A list of all books currently on loan to you</p>
+    </div>
+
+    <div class="students-section">
+      <div th:if="${#lists.isEmpty(issuedBooks)}" class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <h3>You have no issued books</h3>
+        <p>Go to the book catalog to issue a new book.</p>
+      </div>
+
+      <ul th:unless="${#lists.isEmpty(issuedBooks)}" class="issued-list">
+        <li th:each="ib : ${issuedBooks}" class="issued-item">
+          <div class="issued-details">
+            <strong><span th:text="${ib.book.title}"></span></strong>
+            <br>
+            <small>by <span th:text="${ib.book.author}"></span> | Due Date: <span
+                th:text="${ib.dueDate}"></span></small>
+          </div>
+          <div class="issued-actions">
+            <a th:href="@{'/student/return/' + ${ib.id}}" class="action-btn delete-btn"
+              onclick="return confirm('Do you want to return this book?')">
+              <i class="fas fa-undo"></i> Return
+            </a>
+          </div>
+        </li>
+      </ul>
+
+      <div th:if="${param.success != null && param.success[0] == 'returned'}" class="success-message"
+        style="margin-top: 1rem;">
+        <p><i class="fas fa-check-circle"></i> Book returned successfully! Inventory updated.</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <title>Issue Book (Admin) - Library Management System</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+
+<body>
+
+  <nav>
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-book"></i>
+        <h2>Library Management</h2>
+      </div>
+      <ul class="nav-links">
+        <li><a th:href="@{/books}"><i class="fas fa-book-open"></i> Books</a></li>
+        <li><a th:href="@{/admin/students}"><i class="fas fa-user-graduate"></i> Students</a></li>
+        <li><a th:href="@{/admin/issue}" class="active"><i class="fas fa-hand-holding"></i> Issue Book</a></li>
+        <li><a th:href="@{/admin/issued}"><i class="fas fa-list-alt"></i> Issued Books (Admin)</a></li>
+        <li>
+          <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" class="logout-btn">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="page-header">
+      <h1 class="page-title">Issue Book (Admin)</h1>
+      <p class="page-subtitle">Connect students with their next great read</p>
+    </div>
+
+    <div class="form-card">
+      <div th:if="${#lists.isEmpty(students) or #lists.isEmpty(books)}" class="empty-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Cannot Issue Books</h3>
+        <p>Please add at least one student and one book to the system before issuing.</p>
+      </div>
+
+      <div th:unless="${#lists.isEmpty(students) or #lists.isEmpty(books)}">
+        <h2 class="form-title">
+          <i class="fas fa-hand-holding-heart"></i>
+          Issue a Book
+        </h2>
+        <form th:action="@{/admin/issue}" method="post">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="student">Select Student</label>
+              <select id="student" name="student" class="form-control" required>
+                <option value="">-- Select a Student --</option>
+                <option th:each="s : ${students}" th:value="${s.id}" th:text="${s.name} + ' (' + ${s.rollNumber} + ')'">
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="book">Select Book</label>
+              <select id="book" name="book" class="form-control" required>
+                <option value="">-- Select a Book --</option>
+                <option th:each="b : ${books}" th:value="${b.id}" th:text="${b.title}"></option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-check-circle"></i> Issue Book
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
