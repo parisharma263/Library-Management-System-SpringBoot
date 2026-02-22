@@ -19,11 +19,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    @org.springframework.context.annotation.Lazy
+    private UserService userService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found: " + username);
+        }
+
+        boolean accountNonLocked = user.isAccountNonLocked();
+        if (!accountNonLocked) {
+            if (userService.unlockWhenTimeExpired(user)) {
+                accountNonLocked = true;
+            }
         }
 
         // Get the role, convert to the required Spring Security format (ROLE_ + ROLE_NAME)
@@ -35,7 +46,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                authorities // Now contains ROLE_ADMIN or ROLE_STUDENT
+                true, // enabled
+                true, // accountNonExpired
+                true, // credentialsNonExpired
+                accountNonLocked, // accountNonLocked
+                authorities
         );
     }
 }
